@@ -1,10 +1,11 @@
 require 'pry'
 class Pantry
-  attr_reader :stock, :shopping_list
+  attr_reader :stock, :shopping_list, :cookbook
 
   def initialize
     @stock = {}
     @shopping_list = {}
+    @cookbook = []
   end
 
   def stock_check(item)
@@ -41,5 +42,24 @@ class Pantry
       printed_list += "* #{item[0]}: #{item[1]}\n"
     end
     printed_list.chomp
+  end
+
+  def add_to_cookbook(recipe)
+    @cookbook.push(recipe)
+  end
+
+  def what_can_i_make
+    recipes_i_can_make = cookbook.map do |recipe|
+      enough_ingredients = recipe.ingredients.map do |key, value|
+        value <= stock[key]
+      end
+      can_make = enough_ingredients.all? do |value|
+        value == true
+      end
+      if can_make
+        recipe.name
+      end
+    end
+    recipes_i_can_make.compact
   end
 end
