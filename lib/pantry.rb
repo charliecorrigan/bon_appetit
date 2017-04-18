@@ -34,4 +34,12 @@ class Pantry
       end
     end
   end
+
+  def print_shopping_list
+    printed_list = ""
+    shopping_list.each do |item|
+      printed_list += "* #{item[0]}: #{item[1]}\n"
+    end
+    printed_list.chomp
+  end
 end
