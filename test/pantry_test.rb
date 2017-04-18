@@ -1,4 +1,5 @@
 require './lib/pantry'
+require './lib/recipe'
 require 'minitest/autorun'
 require 'minitest/pride'
 
@@ -58,5 +59,21 @@ class PantryTest < Minitest::Test
     pantry.restock("Cheese", 20)
     output_3 = pantry.stock_check("Cheese")
     assert_equal 30, output_3
+  end
+
+  def test_test_access_to_recipe_class_and_methods
+    pantry = Pantry.new
+    r = Recipe.new("Cheese Pizza")
+    assert_instance_of Recipe, r
+    assert_instance_of Pantry, pantry
+    assert_equal Hash, r.ingredients.class
+    assert r.ingredients.empty?
+
+    r.add_ingredient("Cheese", 20)
+    r.add_ingredient("Flour", 20)
+
+    output = r.ingredients
+    expected = {"Cheese" => 20, "Flour" => 20}
+    assert_equal expected, output
   end
 end
