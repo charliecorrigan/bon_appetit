@@ -76,4 +76,56 @@ class PantryTest < Minitest::Test
     expected = {"Cheese" => 20, "Flour" => 20}
     assert_equal expected, output
   end
+
+  def test_pantry_has_shopping_list_attribute
+    pantry = Pantry.new
+    output = pantry.shopping_list
+    assert_equal Hash, output.class
+    assert output.empty?
+  end
+
+  def test_add_to_shopping_list_accepts_recipe
+    pantry = Pantry.new
+    r = Recipe.new("Cheese Pizza")
+    r.add_ingredient("Cheese", 20)
+    r.add_ingredient("Flour", 20)
+
+    output = pantry.add_to_shopping_list(r)
+    refute output.nil?
+    
+  end
+
+  def test_add_to_pantry_updates_shopping_list
+    pantry = Pantry.new
+    r = Recipe.new("Cheese Pizza")
+    r.add_ingredient("Cheese", 20)
+    r.add_ingredient("Flour", 20)
+    pantry.add_to_shopping_list(r)
+    
+    output = pantry.shopping_list
+    expected = {"Cheese" => 20, "Flour" => 20}
+    assert_equal expected, output
+  end
+
+  def test_add_to_pantry_updates_shopping_list_and_does_not_overwrite_previous_values
+    pantry = Pantry.new
+    r = Recipe.new("Cheese Pizza")
+    r.add_ingredient("Cheese", 20)
+    r.add_ingredient("Flour", 20)
+    pantry.add_to_shopping_list(r)
+    
+    output_1 = pantry.shopping_list
+    expected_1 = {"Cheese" => 20, "Flour" => 20}
+    assert_equal expected_1, output_1
+
+    r = Recipe.new("Spaghetti")
+    r.add_ingredient("Noodles", 10)
+    r.add_ingredient("Sauce", 10)
+    r.add_ingredient("Cheese", 5)
+    pantry.add_to_shopping_list(r)
+
+    output_2 = pantry.shopping_list
+    expected_2 = {"Cheese" => 25, "Flour" => 20, "Noodles" => 10, "Sauce" => 10}
+    assert_equal expected_2, output_2
+  end
 end
